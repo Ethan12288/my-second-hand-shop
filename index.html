@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的二手小舖</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts 的字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Serif TC', serif; background-color: #f5f1e8; background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png'); display: flex; flex-direction: column; min-height: 100vh; }
+        main.container { flex-grow: 1; }
+        .loader { border: 5px solid #f3f3f3; border-radius: 50%; border-top: 5px solid #8b5cf6; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: #f1f1f1; } ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; } ::-webkit-scrollbar-thumb:hover { background: #555; }
+        .page { display: none; }
+        .page.active { display: block; }
+    </style>
+</head>
+<body class="text-stone-800">
+    <!-- 設定錯誤遮罩 -->
+    <div id="config-error-overlay" class="fixed inset-0 bg-red-900 bg-opacity-95 z-[100] flex justify-center items-center text-white text-center p-8 hidden">
+        <div>
+            <h1 class="text-4xl font-bold mb-4">設定錯誤</h1>
+            <p class="text-lg">您的網站尚未完成設定！</p>
+            <p class="mt-4 max-w-2xl">請打開程式碼檔案，找到 <code class="bg-red-700 px-2 py-1 rounded">firebaseConfig</code> 物件，並依照註解說明，貼上您從 Firebase 控制台複製的設定資料。沒有正確的設定，網站將無法連接到您的資料庫和使用者後台。</p>
+        </div>
+    </div>
+    
+    <!-- 全局頁首 -->
+    <header class="bg-stone-700 text-stone-200 shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold hover:text-white transition-colors">我的二手小舖</a>
+        </div>
+    </header>
+
+    <!-- 管理員模式提示橫幅 (預設隱藏) -->
+    <div id="admin-banner" class="hidden bg-purple-600 text-white text-center py-2 fixed top-16 w-full z-30 text-sm font-semibold flex justify-center items-center shadow-lg">
+        <span>您正以 <span id="admin-email" class="font-bold"></span> 的身分登入</span>
+        <button id="manage-products-btn" class="ml-4 text-xs bg-purple-700 hover:bg-purple-800 px-3 py-1 rounded-full transition-colors">商品管理</button>
+        <button id="logout-btn" class="ml-2 text-xs bg-purple-800 hover:bg-purple-900 px-3 py-1 rounded-full transition-colors">登出</button>
+    </div>
+
+    <!-- 頁面容器 -->
+    <main class="container mx-auto px-4 py-12" id="main-container">
+        <!-- 首頁 -->
+        <div id="home-page" class="page">
+            <header class="text-center mb-12"><h1 class="text-5xl font-bold text-stone-700" style="font-weight: 700;">所有商品</h1><p class="text-stone-500 mt-3 text-lg">尋找你的下一個寶藏！</p></header>
+            <section id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8"></section>
+            <nav id="pagination-controls" class="flex justify-center items-center mt-12 space-x-4"></nav>
+        </div>
+        
+        <!-- 商品獨立頁面 -->
+        <div id="product-detail-page" class="page"></div>
+
+        <!-- 購物車頁面 -->
+        <div id="cart-page" class="page"></div>
+    </main>
+
+    <!-- 浮動購物車按鈕 -->
+    <a href="#/cart" id="cart-fab" class="fixed bottom-6 right-6 bg-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg hover:bg-purple-700 transition-transform hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+        <span id="cart-item-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-purple-600">0</span>
+    </a>
+    
+    <!-- 頁腳 -->
+    <footer class="bg-stone-700 text-stone-200 mt-16 py-8">
+        <!-- ... (頁腳內容與前版相同) ... -->
+    </footer>
+
+    <!-- MODALS (彈出視窗) -->
+    <!-- ... (所有 Modal 內容與前版相同) ... -->
+
+    <script type="module">
+        // --- 匯入 Firebase SDK ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+        // --- Firebase 設定 ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDw6Dmul_t9-EuY6tVI7O5Qi-krbg-4oUg",
+            authDomain: "mygoods-46ba7.firebaseapp.com",
+            projectId: "mygoods-46ba7",
+            storageBucket: "mygoods-46ba7.appspot.com",
+            messagingSenderId: "416529518905",
+            appId: "1:416529518905:web:19f780bcae218ca5e558e8",
+            measurementId: "G-PMR6NZ7LRZ"
+        };
+        
+        // --- 初始化 Firebase & 全局變數 ---
+        let app, auth, db, storage;
+        let isCurrentlyAdmin = false;
+        let localProductsCache = [];
+        let cart = [];
+
+        // --- DOM 元素 ---
+        const getEl = (id) => document.getElementById(id);
+
+        // --- 購物車核心功能 ---
+        function getCartFromStorage() {
+            return JSON.parse(localStorage.getItem('myShopCart') || '[]');
+        }
+        function saveCartToStorage() {
+            localStorage.setItem('myShopCart', JSON.stringify(cart));
+        }
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            getEl('cart-item-count').innerText = count;
+        }
+        function addToCart(productId, quantity = 1) {
+            const product = localProductsCache.find(p => p.id === productId);
+            if (!product || product.quantity < 1) return; // 確保商品存在且有庫存
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ id: productId, quantity: quantity });
+            }
+            saveCartToStorage();
+            updateCartCount();
+            alert(`「${product.name}」已加入購物車！`);
+        }
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            saveCartToStorage();
+            updateCartCount();
+            renderCartPage(); // 重新渲染購物車頁面
+        }
+        function updateCartItemQuantity(productId, newQuantity) {
+            const itemInCart = cart.find(item => item.id === productId);
+            if (itemInCart) {
+                itemInCart.quantity = Math.max(1, newQuantity); // 數量最少為 1
+            }
+            saveCartToStorage();
+            updateCartCount();
+            renderCartPage();
+        }
+
+        // --- 渲染函式 ---
+        function renderHomePage() {
+            const productGrid = getEl('product-grid');
+            const productsToShow = isCurrentlyAdmin ? localProductsCache : localProductsCache.filter(p => p.isListed);
+            productGrid.innerHTML = '';
+            productsToShow.forEach(product => {
+                productGrid.innerHTML += `
+                    <div class="bg-stone-50 rounded-lg shadow-lg overflow-hidden flex flex-col">
+                        <a href="#/product/${product.id}">
+                            <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-64 object-cover">
+                        </a>
+                        <div class="p-5 flex flex-col flex-grow">
+                             <h3 class="text-xl font-semibold text-stone-700 truncate">${product.name}</h3>
+                             <div class="mt-auto pt-4">
+                                <p class="text-lg font-bold text-red-800">NT.${product.price}元</p>
+                                <button class="add-to-cart-btn w-full mt-2 bg-stone-700 text-white py-2 rounded-lg" data-id="${product.id}">加入購物車</button>
+                             </div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        async function renderProductDetailPage(productId) {
+            const detailPage = getEl('product-detail-page');
+            const product = localProductsCache.find(p => p.id === productId);
+            if (!product) {
+                detailPage.innerHTML = `<p class="text-center">找不到該商品。</p>`;
+                return;
+            }
+            detailPage.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <a href="#" class="text-purple-600 hover:underline mb-6 inline-block">&larr; 返回所有商品</a>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div><img src="${product.imageUrl}" alt="${product.name}" class="w-full rounded-lg shadow-lg"></div>
+                        <div>
+                            <h1 class="text-4xl font-bold text-stone-800">${product.name}</h1>
+                            <p class="text-3xl font-bold text-red-800 my-4">NT.${product.price}元</p>
+                            <p class="text-stone-600 mb-6">${product.description || '店主很懶，還沒寫下這件寶貝的故事...'}</p>
+                            <button class="add-to-cart-btn w-full py-3 bg-purple-600 text-white text-lg rounded-lg hover:bg-purple-700" data-id="${product.id}">加入購物車</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+        
+        async function renderCartPage() {
+            const cartPage = getEl('cart-page');
+            if (cart.length === 0) {
+                cartPage.innerHTML = `<div class="text-center py-16"><h2 class="text-3xl font-bold mb-4">您的購物車是空的</h2><a href="#" class="text-purple-600 text-lg hover:underline">快去尋找一些寶藏吧！ &rarr;</a></div>`;
+                return;
+            }
+            
+            let cartItemsHTML = '';
+            let subtotal = 0;
+            for (const item of cart) {
+                const product = localProductsCache.find(p => p.id === item.id);
+                if(product) {
+                    const itemTotal = product.price * item.quantity;
+                    subtotal += itemTotal;
+                    cartItemsHTML += `
+                        <div class="flex items-center justify-between py-4 border-b">
+                            <div class="flex items-center">
+                                <img src="${product.imageUrl}" class="w-20 h-20 object-cover rounded-md mr-4">
+                                <div>
+                                    <p class="font-bold">${product.name}</p>
+                                    <p class="text-sm text-stone-500">單價: NT.${product.price}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <input type="number" value="${item.quantity}" min="1" class="cart-quantity-input w-16 text-center border rounded" data-id="${product.id}">
+                                <p class="w-24 text-right">NT.${itemTotal}</p>
+                                <button class="remove-from-cart-btn text-red-500 hover:text-red-700" data-id="${product.id}">&times;</button>
+                            </div>
+                        </div>`;
+                }
+            }
+            
+            cartPage.innerHTML = `
+                <h1 class="text-4xl font-bold text-center mb-8">我的購物車</h1>
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+                        ${cartItemsHTML}
+                    </div>
+                    <div class="lg:col-span-1">
+                         <div class="bg-white p-6 rounded-lg shadow-lg sticky top-24">
+                            <h2 class="text-2xl font-bold border-b pb-4 mb-4">訂單摘要</h2>
+                            <div class="flex justify-between mb-2"><p>小計</p><p>NT.${subtotal}</p></div>
+                            <div class="flex justify-between mb-4"><p>運費</p><p>NT.60</p></div>
+                            <div class="flex justify-between font-bold text-xl border-t pt-4"><p>總計</p><p>NT.${subtotal + 60}</p></div>
+                            <form id="shipping-form" class="mt-6 space-y-4">
+                                <input type="text" placeholder="收件人姓名" required class="w-full border rounded p-2">
+                                <input type="tel" placeholder="聯絡電話" required class="w-full border rounded p-2">
+                                <input type="text" placeholder="寄送地址" required class="w-full border rounded p-2">
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="terms-agree" required class="mt-1">
+                                    <label for="terms-agree" class="ml-2 text-sm">我已閱讀並同意<a href="#" class="footer-link text-purple-600 underline" data-policy="terms">服務條款</a>與<a href="#" class="footer-link text-purple-600 underline" data-policy="returns">退換貨政策</a></label>
+                                </div>
+                                <button type="submit" class="w-full py-3 bg-purple-600 text-white text-lg rounded-lg hover:bg-purple-700">送出訂單</button>
+                            </form>
+                         </div>
+                    </div>
+                </div>`;
+        }
+
+        // --- 路由處理 ---
+        function handleRouteChange() {
+            const hash = window.location.hash || '#/';
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+            if (hash.startsWith('#/product/')) {
+                const productId = hash.substring('#/product/'.length);
+                renderProductDetailPage(productId);
+                getEl('product-detail-page').classList.add('active');
+            } else if (hash === '#/cart') {
+                renderCartPage();
+                getEl('cart-page').classList.add('active');
+            } else {
+                renderHomePage();
+                getEl('home-page').classList.add('active');
+            }
+        }
+        
+        // --- 事件監聽器設定 ---
+        function setupEventListeners() {
+            document.body.addEventListener('click', (e) => {
+                if (e.target.closest('.add-to-cart-btn')) {
+                    addToCart(e.target.closest('.add-to-cart-btn').dataset.id);
+                }
+                if (e.target.closest('.remove-from-cart-btn')) {
+                    removeFromCart(e.target.closest('.remove-from-cart-btn').dataset.id);
+                }
+            });
+
+            getEl('cart-page').addEventListener('change', (e) => {
+                if(e.target.classList.contains('cart-quantity-input')) {
+                    const productId = e.target.dataset.id;
+                    const newQuantity = parseInt(e.target.value, 10);
+                    updateCartItemQuantity(productId, newQuantity);
+                }
+            });
+
+            getEl('cart-page').addEventListener('submit', (e) => {
+                if (e.target.id === 'shipping-form') {
+                    e.preventDefault();
+                    alert('感謝您的訂購！我們將盡快為您處理。');
+                    cart = []; // 清空購物車
+                    saveCartToStorage();
+                    updateCartCount();
+                    window.location.hash = '/'; // 跳回首頁
+                }
+            });
+            // ... (其他事件監聽器與前版相同)
+        }
+
+        // --- 初始載入 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!firebaseConfig || !firebaseConfig.apiKey) {
+                getEl('config-error-overlay').classList.remove('hidden');
+                return; 
+            }
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                storage = getStorage(app);
+            } catch(e) { /* ... */ }
+
+            cart = getCartFromStorage();
+            updateCartCount();
+
+            onAuthStateChanged(auth, user => { /* ... */ });
+
+            onSnapshot(collection(db, "products"), (querySnapshot) => {
+                localProductsCache = [];
+                querySnapshot.forEach((doc) => {
+                    localProductsCache.push({ id: doc.id, ...doc.data() });
+                });
+                // 收到資料後，根據當前路由渲染頁面
+                handleRouteChange(); 
+            });
+
+            window.addEventListener('hashchange', handleRouteChange);
+            
+            // 處理初次載入
+            handleRouteChange();
+            setupEventListeners();
+        });
+    </script>
+</body>
+</html>
