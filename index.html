@@ -16,8 +16,6 @@
         .loader { border: 5px solid #f3f3f3; border-radius: 50%; border-top: 5px solid #8b5cf6; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: #f1f1f1; } ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; } ::-webkit-scrollbar-thumb:hover { background: #555; }
-        .page { display: none; }
-        .page.active { display: block; }
     </style>
 </head>
 <body class="text-stone-800">
@@ -29,56 +27,48 @@
             <p class="mt-4 max-w-2xl">請打開程式碼檔案，找到 <code class="bg-red-700 px-2 py-1 rounded">firebaseConfig</code> 物件，並依照註解說明，貼上您從 Firebase 控制台複製的設定資料。沒有正確的設定，網站將無法連接到您的資料庫和使用者後台。</p>
         </div>
     </div>
-    
-    <!-- 全局頁首 -->
-    <header class="bg-stone-700 text-stone-200 shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-4 h-16 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold hover:text-white transition-colors">我的二手小舖</a>
-        </div>
-    </header>
 
     <!-- 管理員模式提示橫幅 (預設隱藏) -->
-    <div id="admin-banner" class="hidden bg-purple-600 text-white text-center py-2 fixed top-16 w-full z-30 text-sm font-semibold flex justify-center items-center shadow-lg">
+    <div id="admin-banner" class="hidden bg-purple-600 text-white text-center py-2 fixed top-0 w-full z-50 text-sm font-semibold flex justify-center items-center shadow-lg">
         <span>您正以 <span id="admin-email" class="font-bold"></span> 的身分登入</span>
         <button id="manage-products-btn" class="ml-4 text-xs bg-purple-700 hover:bg-purple-800 px-3 py-1 rounded-full transition-colors">商品管理</button>
         <button id="logout-btn" class="ml-2 text-xs bg-purple-800 hover:bg-purple-900 px-3 py-1 rounded-full transition-colors">登出</button>
     </div>
 
-    <!-- 頁面容器 -->
     <main class="container mx-auto px-4 py-12" id="main-container">
-        <!-- 首頁 -->
-        <div id="home-page" class="page">
-            <header class="text-center mb-12"><h1 class="text-5xl font-bold text-stone-700" style="font-weight: 700;">所有商品</h1><p class="text-stone-500 mt-3 text-lg">尋找你的下一個寶藏！</p></header>
-            <section id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8"></section>
-            <nav id="pagination-controls" class="flex justify-center items-center mt-12 space-x-4"></nav>
-        </div>
-        
-        <!-- 商品獨立頁面 -->
-        <div id="product-detail-page" class="page"></div>
-
-        <!-- 購物車頁面 -->
-        <div id="cart-page" class="page"></div>
+         <header class="text-center mb-12"><h1 class="text-5xl font-bold text-stone-700" style="font-weight: 700;">我的二手小舖</h1><p class="text-stone-500 mt-3 text-lg">尋找你的下一個寶藏！</p></header>
+        <section id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8"></section>
+        <nav id="pagination-controls" class="flex justify-center items-center mt-12 space-x-4"></nav>
     </main>
-
-    <!-- 浮動購物車按鈕 -->
-    <a href="#/cart" id="cart-fab" class="fixed bottom-6 right-6 bg-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg hover:bg-purple-700 transition-transform hover:scale-110">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-        <span id="cart-item-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-purple-600">0</span>
-    </a>
     
-    <!-- 頁腳 -->
     <footer class="bg-stone-700 text-stone-200 mt-16 py-8">
-        <!-- ... (頁腳內容與前版相同) ... -->
+        <div class="container mx-auto px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 text-sm">
+                <a href="#" class="footer-link hover:text-white" data-policy="privacy">隱私權政策</a>
+                <a href="#" class="footer-link hover:text-white" data-policy="terms">服務條款</a>
+                <a href="#" class="footer-link hover:text-white" data-policy="returns">退換貨政策</a>
+                <a href="#" class="footer-link hover:text-white" data-policy="shipping">付款與物流</a>
+                <a href="#" class="footer-link hover:text-white" data-policy="membership">會員條款</a>
+                <a href="#" class="footer-link hover:text-white" data-policy="faq">常見問題</a>
+                <a href="#" class="footer-link hover:text-white" data-policy="contact">聯絡我們</a>
+            </div>
+            <div class="text-center text-stone-400 text-xs mt-8 border-t border-stone-600 pt-6"> © 2025 我的二手小舖. All Rights Reserved. </div>
+        </div>
     </footer>
 
     <!-- MODALS (彈出視窗) -->
-    <!-- ... (所有 Modal 內容與前版相同) ... -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-60 z-[80] flex justify-center items-center hidden"><form id="login-form" class="bg-white rounded-lg shadow-xl w-11/12 max-w-sm p-8 space-y-6"><h2 class="text-2xl font-bold text-center text-stone-700">管理員登入</h2><div><label for="email" class="block text-sm font-medium text-stone-700">電子郵件</label><input type="email" id="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><div><label for="password" class="block text-sm font-medium text-stone-700">密碼</label><input type="password" id="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></div><p id="login-error" class="text-red-500 text-sm text-center hidden"></p><div class="flex flex-col items-center space-y-3 pt-2"><button type="submit" class="w-full px-4 py-2 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700">登入</button><button type="button" id="cancel-login-btn" class="w-full px-4 py-2 text-sm bg-gray-200 rounded-md hover:bg-gray-300">取消</button></div></form></div>
+    <div id="loading-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center hidden"><div class="bg-white p-8 rounded-lg shadow-xl text-center"><div class="loader mx-auto"></div><p id="loading-text" class="mt-4 text-stone-700 font-semibold"></p></div></div>
+    <div id="management-modal" class="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center hidden"><div class="bg-stone-50 rounded-lg shadow-xl w-11/12 max-w-4xl h-5/6 flex flex-col"><header class="p-4 border-b border-stone-200 flex justify-between items-center"><h2 class="text-xl font-bold text-stone-700">商品管理後台</h2><button id="add-product-btn" class="px-4 py-1.5 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">＋ 新增商品</button></header><main class="p-4 overflow-y-auto flex-grow"><div id="management-product-list" class="space-y-2"></div></main><footer class="p-4 border-t border-stone-200 bg-stone-100 flex justify-between items-center"><div class="flex items-center space-x-4"><label class="flex items-center"><input type="checkbox" id="select-all-checkbox" class="h-4 w-4 rounded"><span class="ml-2 text-sm text-stone-700">全選</span></label><select id="batch-action-select" class="rounded-md text-sm"><option value="">選擇批量操作</option><option value="list">上架</option><option value="unlist">下架</option><option value="delete">刪除</option></select><button id="apply-batch-action-btn" class="px-4 py-1.5 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700">套用</button></div><button id="close-management-modal-btn" class="px-4 py-1.5 text-sm bg-gray-200 rounded-md hover:bg-gray-300">關閉</button></footer></div></div>
+    <div id="product-form-modal" class="fixed inset-0 bg-black bg-opacity-60 z-[60] flex justify-center items-center hidden"><form id="product-form" class="bg-white rounded-lg shadow-xl w-11/12 max-w-lg space-y-4 p-6"><input type="hidden" id="product-id-input"><h2 id="product-form-title" class="text-2xl font-bold text-stone-700">新增商品</h2><div><label class="block text-sm font-medium text-stone-700">商品名稱</label><input type="text" id="product-name-input" class="mt-1 block w-full rounded-md" required></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-medium">價格</label><input type="number" id="product-price-input" class="mt-1 block w-full rounded-md" required></div><div><label class="block text-sm font-medium">數量</label><input type="number" id="product-quantity-input" class="mt-1 block w-full rounded-md" required></div></div><div><label class="block text-sm font-medium">圖片上傳</label><input type="file" id="product-image-file-input" accept="image/*" class="mt-1 block w-full text-sm"><input type="text" id="product-image-url-input" placeholder="或貼上圖片網址" class="mt-1 block w-full rounded-md text-sm"><img id="image-preview" src="" class="mt-2 rounded-md max-h-40 hidden"></div><div><label class="block text-sm font-medium">商品描述</label><textarea id="product-description-input" rows="3" class="mt-1 block w-full rounded-md"></textarea></div><div class="flex justify-end space-x-3 pt-4"><button type="button" id="cancel-product-form-btn" class="px-4 py-2 text-sm bg-gray-200 rounded-md hover:bg-gray-300">取消</button><button type="submit" id="save-product-btn" class="px-4 py-2 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700">儲存商品</button></div></form></div>
+    <div id="policy-modal" class="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center hidden p-4"><div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col"><header class="p-4 border-b flex justify-between items-center"><h2 id="policy-title" class="text-xl font-bold"></h2><button id="close-policy-btn" class="text-2xl">&times;</button></header><main id="policy-content" class="p-6 overflow-y-auto"></main></div></div>
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-60 z-[70] flex justify-center items-center hidden"><div class="bg-white rounded-lg shadow-xl w-11/12 max-w-sm p-6 text-center"><h3 id="confirm-title" class="text-lg font-bold text-stone-800"></h3><p id="confirm-text" class="text-sm text-stone-600 my-4"></p><div class="flex justify-center space-x-4"><button id="confirm-cancel-btn" class="px-6 py-2 rounded-md bg-gray-200 hover:bg-gray-300">取消</button><button id="confirm-ok-btn" class="px-6 py-2 rounded-md bg-red-600 text-white hover:bg-red-700">確定</button></div></div></div>
 
     <script type="module">
-        // --- 匯入 Firebase SDK ---
+        // 匯入 Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
         // --- Firebase 設定 ---
@@ -96,236 +86,362 @@
         let app, auth, db, storage;
         let isCurrentlyAdmin = false;
         let localProductsCache = [];
-        let cart = [];
-
-        // --- DOM 元素 ---
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 20;
         const getEl = (id) => document.getElementById(id);
 
-        // --- 購物車核心功能 ---
-        function getCartFromStorage() {
-            return JSON.parse(localStorage.getItem('myShopCart') || '[]');
+        function showLoading(text) {
+            getEl('loading-text').innerText = text;
+            getEl('loading-modal').classList.remove('hidden');
         }
-        function saveCartToStorage() {
-            localStorage.setItem('myShopCart', JSON.stringify(cart));
-        }
-        function updateCartCount() {
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            getEl('cart-item-count').innerText = count;
-        }
-        function addToCart(productId, quantity = 1) {
-            const product = localProductsCache.find(p => p.id === productId);
-            if (!product || product.quantity < 1) return; // 確保商品存在且有庫存
-
-            const existingItem = cart.find(item => item.id === productId);
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({ id: productId, quantity: quantity });
-            }
-            saveCartToStorage();
-            updateCartCount();
-            alert(`「${product.name}」已加入購物車！`);
-        }
-        function removeFromCart(productId) {
-            cart = cart.filter(item => item.id !== productId);
-            saveCartToStorage();
-            updateCartCount();
-            renderCartPage(); // 重新渲染購物車頁面
-        }
-        function updateCartItemQuantity(productId, newQuantity) {
-            const itemInCart = cart.find(item => item.id === productId);
-            if (itemInCart) {
-                itemInCart.quantity = Math.max(1, newQuantity); // 數量最少為 1
-            }
-            saveCartToStorage();
-            updateCartCount();
-            renderCartPage();
+        function hideLoading() {
+            getEl('loading-modal').classList.add('hidden');
         }
 
+        // --- Gemini API 功能 (安全版) ---
+        async function generateDescriptionForProduct(productName) {
+            // **重大變更：不再直接呼叫 Google，而是呼叫我們的 Netlify Function 代理**
+            const functionUrl = '/.netlify/functions/generateDescription';
+            
+            try {
+                const response = await fetch(functionUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productName: productName }) // 將商品名稱傳送給我們的代理
+                });
+
+                if (!response.ok) {
+                    throw new Error(`代理伺服器請求失敗，狀態碼：${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                return result.description;
+
+            } catch (error) {
+                console.error("呼叫代理伺服器時發生錯誤:", error);
+                return "文案產生失敗，請稍後再試。";
+            }
+        }
+        
         // --- 渲染函式 ---
-        function renderHomePage() {
+        function renderAll() {
+            renderProducts();
+            renderPagination();
+        }
+
+        function updateAdminView() {
+            const adminBanner = getEl('admin-banner');
+            const mainContainer = getEl('main-container');
+            if (isCurrentlyAdmin) {
+                adminBanner.classList.remove('hidden');
+                getEl('admin-email').innerText = auth.currentUser.email;
+                mainContainer.style.paddingTop = '3.5rem';
+            } else {
+                adminBanner.classList.add('hidden');
+                mainContainer.style.paddingTop = '0';
+            }
+            renderAll();
+        }
+        
+        function renderProducts() {
             const productGrid = getEl('product-grid');
             const productsToShow = isCurrentlyAdmin ? localProductsCache : localProductsCache.filter(p => p.isListed);
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const productsToRender = productsToShow.slice(startIndex, endIndex);
+
             productGrid.innerHTML = '';
-            productsToShow.forEach(product => {
+            if (productsToRender.length === 0) {
+                 productGrid.innerHTML = `<p class="text-center text-stone-500 col-span-full">目前沒有任何商品。</p>`;
+                 return;
+            }
+
+            productsToRender.forEach(product => {
+                let adminButtonHTML = isCurrentlyAdmin ? `<button class="generate-desc-btn w-full mt-3 bg-purple-100 text-purple-700 py-2 rounded-lg" data-product-id="${product.id}">✨ 產生文案</button>` : '';
+                const cardExtraClasses = isCurrentlyAdmin && !product.isListed ? 'opacity-50' : '';
+                const unlistedBadge = isCurrentlyAdmin && !product.isListed ? '<div class="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full shadow-md">已下架</div>' : '';
+
                 productGrid.innerHTML += `
-                    <div class="bg-stone-50 rounded-lg shadow-lg overflow-hidden flex flex-col">
-                        <a href="#/product/${product.id}">
-                            <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-64 object-cover">
-                        </a>
+                    <div class="relative bg-stone-50 rounded-lg shadow-lg overflow-hidden flex flex-col ${cardExtraClasses}">
+                        ${unlistedBadge}
+                        <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-64 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/eee/333?text=圖片失效';">
                         <div class="p-5 flex flex-col flex-grow">
-                             <h3 class="text-xl font-semibold text-stone-700 truncate">${product.name}</h3>
-                             <div class="mt-auto pt-4">
-                                <p class="text-lg font-bold text-red-800">NT.${product.price}元</p>
-                                <button class="add-to-cart-btn w-full mt-2 bg-stone-700 text-white py-2 rounded-lg" data-id="${product.id}">加入購物車</button>
-                             </div>
+                            <h3 class="text-xl font-semibold text-stone-700 truncate">${product.name}</h3>
+                            <p class="text-stone-600 mt-2 text-sm min-h-[60px] flex-grow">${product.description || ''}</p>
+                            <div class="mt-auto pt-4">
+                                <div class="flex justify-between items-center mt-4"><p class="text-lg font-bold text-red-800">NT.${product.price}元</p><p class="text-sm text-stone-600">數量: ${product.quantity}</p></div>
+                                ${adminButtonHTML}
+                                <button class="w-full mt-2 bg-stone-700 text-white py-2 rounded-lg hover:bg-stone-800">加入購物車</button>
+                            </div>
                         </div>
                     </div>`;
             });
         }
-
-        async function renderProductDetailPage(productId) {
-            const detailPage = getEl('product-detail-page');
-            const product = localProductsCache.find(p => p.id === productId);
-            if (!product) {
-                detailPage.innerHTML = `<p class="text-center">找不到該商品。</p>`;
-                return;
-            }
-            detailPage.innerHTML = `
-                <div class="max-w-4xl mx-auto">
-                    <a href="#" class="text-purple-600 hover:underline mb-6 inline-block">&larr; 返回所有商品</a>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div><img src="${product.imageUrl}" alt="${product.name}" class="w-full rounded-lg shadow-lg"></div>
-                        <div>
-                            <h1 class="text-4xl font-bold text-stone-800">${product.name}</h1>
-                            <p class="text-3xl font-bold text-red-800 my-4">NT.${product.price}元</p>
-                            <p class="text-stone-600 mb-6">${product.description || '店主很懶，還沒寫下這件寶貝的故事...'}</p>
-                            <button class="add-to-cart-btn w-full py-3 bg-purple-600 text-white text-lg rounded-lg hover:bg-purple-700" data-id="${product.id}">加入購物車</button>
-                        </div>
-                    </div>
-                </div>`;
-        }
         
-        async function renderCartPage() {
-            const cartPage = getEl('cart-page');
-            if (cart.length === 0) {
-                cartPage.innerHTML = `<div class="text-center py-16"><h2 class="text-3xl font-bold mb-4">您的購物車是空的</h2><a href="#" class="text-purple-600 text-lg hover:underline">快去尋找一些寶藏吧！ &rarr;</a></div>`;
-                return;
-            }
-            
-            let cartItemsHTML = '';
-            let subtotal = 0;
-            for (const item of cart) {
-                const product = localProductsCache.find(p => p.id === item.id);
-                if(product) {
-                    const itemTotal = product.price * item.quantity;
-                    subtotal += itemTotal;
-                    cartItemsHTML += `
-                        <div class="flex items-center justify-between py-4 border-b">
-                            <div class="flex items-center">
-                                <img src="${product.imageUrl}" class="w-20 h-20 object-cover rounded-md mr-4">
-                                <div>
-                                    <p class="font-bold">${product.name}</p>
-                                    <p class="text-sm text-stone-500">單價: NT.${product.price}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-4">
-                                <input type="number" value="${item.quantity}" min="1" class="cart-quantity-input w-16 text-center border rounded" data-id="${product.id}">
-                                <p class="w-24 text-right">NT.${itemTotal}</p>
-                                <button class="remove-from-cart-btn text-red-500 hover:text-red-700" data-id="${product.id}">&times;</button>
-                            </div>
-                        </div>`;
-                }
-            }
-            
-            cartPage.innerHTML = `
-                <h1 class="text-4xl font-bold text-center mb-8">我的購物車</h1>
-                <div class="grid lg:grid-cols-3 gap-12">
-                    <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
-                        ${cartItemsHTML}
-                    </div>
-                    <div class="lg:col-span-1">
-                         <div class="bg-white p-6 rounded-lg shadow-lg sticky top-24">
-                            <h2 class="text-2xl font-bold border-b pb-4 mb-4">訂單摘要</h2>
-                            <div class="flex justify-between mb-2"><p>小計</p><p>NT.${subtotal}</p></div>
-                            <div class="flex justify-between mb-4"><p>運費</p><p>NT.60</p></div>
-                            <div class="flex justify-between font-bold text-xl border-t pt-4"><p>總計</p><p>NT.${subtotal + 60}</p></div>
-                            <form id="shipping-form" class="mt-6 space-y-4">
-                                <input type="text" placeholder="收件人姓名" required class="w-full border rounded p-2">
-                                <input type="tel" placeholder="聯絡電話" required class="w-full border rounded p-2">
-                                <input type="text" placeholder="寄送地址" required class="w-full border rounded p-2">
-                                <div class="flex items-start">
-                                    <input type="checkbox" id="terms-agree" required class="mt-1">
-                                    <label for="terms-agree" class="ml-2 text-sm">我已閱讀並同意<a href="#" class="footer-link text-purple-600 underline" data-policy="terms">服務條款</a>與<a href="#" class="footer-link text-purple-600 underline" data-policy="returns">退換貨政策</a></label>
-                                </div>
-                                <button type="submit" class="w-full py-3 bg-purple-600 text-white text-lg rounded-lg hover:bg-purple-700">送出訂單</button>
-                            </form>
-                         </div>
-                    </div>
-                </div>`;
+        function renderPagination() {
+            const paginationControls = getEl('pagination-controls');
+            const productsToShow = isCurrentlyAdmin ? localProductsCache : localProductsCache.filter(p => p.isListed);
+            paginationControls.innerHTML = '';
+            const totalPages = Math.ceil(productsToShow.length / ITEMS_PER_PAGE);
+            if (totalPages <= 1) return;
+            const createButton = (text, isDisabled, onClick) => {
+                const btn = document.createElement('button');
+                btn.innerText = text;
+                btn.disabled = isDisabled;
+                btn.className = `px-4 py-2 rounded-md transition-colors duration-300 ${isDisabled ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-100 shadow'}`;
+                btn.addEventListener('click', onClick);
+                return btn;
+            };
+            const changePage = (newPage) => { currentPage = newPage; renderAll(); window.scrollTo(0, 0); };
+            paginationControls.appendChild(createButton('上一頁', currentPage === 1, () => changePage(currentPage - 1)));
+            const pageInfo = document.createElement('span');
+            pageInfo.className = 'text-gray-700 font-medium';
+            pageInfo.innerText = `第 ${currentPage} / ${totalPages} 頁`;
+            paginationControls.appendChild(pageInfo);
+            paginationControls.appendChild(createButton('下一頁', currentPage === totalPages, () => changePage(currentPage + 1)));
         }
 
-        // --- 路由處理 ---
-        function handleRouteChange() {
-            const hash = window.location.hash || '#/';
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        function renderManagementPanel() {
+            const listContainer = getEl('management-product-list');
+            listContainer.innerHTML = '';
+            if (localProductsCache.length === 0) { listContainer.innerHTML = `<p class="text-center text-stone-500 py-4">目前沒有任何商品。</p>`; return; }
+            
+            const sortedProducts = [...localProductsCache].sort((a, b) => (a.createdAt?.seconds || 0) < (b.createdAt?.seconds || 0) ? 1 : -1);
 
-            if (hash.startsWith('#/product/')) {
-                const productId = hash.substring('#/product/'.length);
-                renderProductDetailPage(productId);
-                getEl('product-detail-page').classList.add('active');
-            } else if (hash === '#/cart') {
-                renderCartPage();
-                getEl('cart-page').classList.add('active');
+            sortedProducts.forEach(p => {
+                listContainer.innerHTML += `
+                <div class="flex items-center justify-between bg-white p-2 rounded-md shadow-sm border">
+                    <div class="flex items-center flex-grow"><input type="checkbox" class="management-checkbox h-4 w-4" data-id="${p.id}"><span class="ml-3 text-stone-700 truncate w-48">${p.name}</span></div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm w-16 text-center ${p.isListed ? 'text-green-600' : 'text-red-600'}">${p.isListed ? '✓ 已上架' : '✗ 已下架'}</span>
+                        <button data-id="${p.id}" class="edit-product-btn px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700">編輯</button>
+                        <button data-id="${p.id}" class="delete-product-btn px-3 py-1 text-xs rounded-full bg-red-100 text-red-700">刪除</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        async function openProductForm(product = null) {
+            const form = getEl('product-form');
+            form.reset();
+            const preview = getEl('image-preview');
+            preview.classList.add('hidden');
+            preview.src = '';
+            if (product) {
+                getEl('product-form-title').innerText = '編輯商品';
+                getEl('product-id-input').value = product.id;
+                getEl('product-name-input').value = product.name;
+                getEl('product-price-input').value = product.price;
+                getEl('product-quantity-input').value = product.quantity;
+                getEl('product-image-url-input').value = product.imageUrl;
+                getEl('product-description-input').value = product.description;
+                if(product.imageUrl) { preview.src = product.imageUrl; preview.classList.remove('hidden'); }
             } else {
-                renderHomePage();
-                getEl('home-page').classList.add('active');
+                getEl('product-form-title').innerText = '新增商品';
+                getEl('product-id-input').value = '';
+            }
+            getEl('product-form-modal').classList.remove('hidden');
+        }
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            const saveBtn = getEl('save-product-btn');
+            saveBtn.disabled = true;
+            
+            const id = getEl('product-id-input').value;
+            const imageFile = getEl('product-image-file-input').files[0];
+            let imageUrl = getEl('product-image-url-input').value || getEl('image-preview').src || 'https://placehold.co/600x400/eee/333?text=無圖片';
+            
+            try {
+                if (imageFile) {
+                    saveBtn.innerText = '圖片上傳中...';
+                    const storageRef = ref(storage, `product-images/${Date.now()}_${imageFile.name}`);
+                    const uploadTask = await uploadBytes(storageRef, imageFile);
+                    imageUrl = await getDownloadURL(uploadTask.ref);
+                }
+
+                saveBtn.innerText = '儲存商品中...';
+                const productData = {
+                    name: getEl('product-name-input').value,
+                    price: parseInt(getEl('product-price-input').value, 10),
+                    quantity: parseInt(getEl('product-quantity-input').value, 10),
+                    imageUrl: imageUrl,
+                    description: getEl('product-description-input').value
+                };
+
+                if (id) {
+                    const docRef = doc(db, 'products', id);
+                    await updateDoc(docRef, productData);
+                } else {
+                    productData.isListed = true;
+                    productData.createdAt = new Date();
+                    await addDoc(collection(db, 'products'), productData);
+                }
+                
+                getEl('product-form-modal').classList.add('hidden');
+            } catch (error) {
+                console.error("儲存商品失敗:", error);
+                alert("操作失敗，無法連接到資料庫或儲存空間。");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = '儲存商品';
             }
         }
         
-        // --- 事件監聽器設定 ---
-        function setupEventListeners() {
-            document.body.addEventListener('click', (e) => {
-                if (e.target.closest('.add-to-cart-btn')) {
-                    addToCart(e.target.closest('.add-to-cart-btn').dataset.id);
-                }
-                if (e.target.closest('.remove-from-cart-btn')) {
-                    removeFromCart(e.target.closest('.remove-from-cart-btn').dataset.id);
-                }
-            });
-
-            getEl('cart-page').addEventListener('change', (e) => {
-                if(e.target.classList.contains('cart-quantity-input')) {
-                    const productId = e.target.dataset.id;
-                    const newQuantity = parseInt(e.target.value, 10);
-                    updateCartItemQuantity(productId, newQuantity);
-                }
-            });
-
-            getEl('cart-page').addEventListener('submit', (e) => {
-                if (e.target.id === 'shipping-form') {
-                    e.preventDefault();
-                    alert('感謝您的訂購！我們將盡快為您處理。');
-                    cart = []; // 清空購物車
-                    saveCartToStorage();
-                    updateCartCount();
-                    window.location.hash = '/'; // 跳回首頁
-                }
-            });
-            // ... (其他事件監聽器與前版相同)
+        let confirmCallback = null;
+        function showConfirm(title, text, onConfirm) {
+            getEl('confirm-title').innerText = title;
+            getEl('confirm-text').innerText = text;
+            confirmCallback = onConfirm;
+            getEl('confirm-modal').classList.remove('hidden');
         }
 
-        // --- 初始載入 ---
+        function setupEventListeners() {
+            getEl('logout-btn').addEventListener('click', () => { signOut(auth); });
+            getEl('login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = getEl('email').value;
+                const password = getEl('password').value;
+                const loginError = getEl('login-error');
+                signInWithEmailAndPassword(auth, email, password)
+                    .then(() => {
+                        getEl('login-modal').classList.add('hidden');
+                        loginError.classList.add('hidden');
+                    })
+                    .catch((error) => {
+                        console.error("登入失敗:", error.message);
+                        loginError.innerText = "登入失敗，請檢查您的帳號或密碼。";
+                        loginError.classList.remove('hidden');
+                    });
+            });
+            getEl('cancel-login-btn').addEventListener('click', () => getEl('login-modal').classList.add('hidden'));
+
+            getEl('product-grid').addEventListener('click', async (e) => {
+                if (e.target.classList.contains('generate-desc-btn')) {
+                    const btn = e.target;
+                    const id = btn.dataset.productId;
+                    const product = localProductsCache.find(p => p.id === id);
+                    if (!product) return;
+                    showLoading('✨ AI 正在為您撰寫文案...');
+                    btn.disabled = true;
+                    const description = await generateDescriptionForProduct(product.name);
+                    const docRef = doc(db, 'products', id);
+                    await updateDoc(docRef, { description: description });
+                    hideLoading();
+                }
+            });
+
+            getEl('manage-products-btn').addEventListener('click', () => { renderManagementPanel(); getEl('management-modal').classList.remove('hidden'); });
+            getEl('close-management-modal-btn').addEventListener('click', () => getEl('management-modal').classList.add('hidden'));
+            getEl('add-product-btn').addEventListener('click', () => openProductForm());
+            getEl('management-product-list').addEventListener('click', (e) => {
+                const id = e.target.dataset.id;
+                if (!id) return;
+                if (e.target.classList.contains('edit-product-btn')) { openProductForm(localProductsCache.find(p => p.id === id)); }
+                if (e.target.classList.contains('delete-product-btn')) {
+                    const product = localProductsCache.find(p => p.id === id);
+                    showConfirm('確定刪除？', `您確定要刪除商品「${product.name}」嗎？`, async () => {
+                        await deleteDoc(doc(db, "products", id));
+                    });
+                }
+            });
+            getEl('select-all-checkbox').addEventListener('change', (e) => { document.querySelectorAll('.management-checkbox').forEach(cb => { cb.checked = e.target.checked; }); });
+            
+            getEl('apply-batch-action-btn').addEventListener('click', () => {
+                const action = getEl('batch-action-select').value;
+                const selectedIds = Array.from(document.querySelectorAll('.management-checkbox:checked')).map(cb => cb.dataset.id);
+                if (!action || selectedIds.length === 0) return;
+                const performAction = async () => {
+                    const promises = selectedIds.map(id => {
+                        const docRef = doc(db, 'products', id);
+                        if (action === 'delete') { return deleteDoc(docRef); } 
+                        else { return updateDoc(docRef, { isListed: (action === 'list') }); }
+                    });
+                    await Promise.all(promises);
+                };
+                if (action === 'delete') { showConfirm('確定刪除？', `您確定要刪除 ${selectedIds.length} 個選定的商品嗎？`, performAction); } 
+                else { performAction(); }
+            });
+
+            getEl('product-form').addEventListener('submit', saveProduct);
+            getEl('cancel-product-form-btn').addEventListener('click', () => getEl('product-form-modal').classList.add('hidden'));
+            getEl('product-image-file-input').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) { const reader = new FileReader(); reader.onload = (event) => { const preview = getEl('image-preview'); preview.src = event.target.result; preview.classList.remove('hidden'); getEl('product-image-url-input').value = ''; }; reader.readAsDataURL(file); }
+            });
+            
+            document.querySelector('footer').addEventListener('click', (e) => {
+                if (e.target.classList.contains('footer-link')) {
+                    e.preventDefault();
+                    const policies = {
+                        privacy: { title: '隱私權政策', content: '我們非常重視您的隱私權...' },
+                        terms: { title: '服務條款', content: '歡迎您使用我們的服務...' },
+                        returns: { title: '退換貨政策', content: '依據台灣消費者保護法規定...' },
+                        shipping: { title: '付款與物流政策', content: '我們支援以下付款方式...' },
+                        membership: { title: '會員條款與權益', content: '成為我們的會員可享有...' },
+                        faq: { title: '常見問題', content: '<b>Q: 如何查詢我的訂單？</b><br>A: ...' },
+                        contact: { title: '聯絡我們', content: '若有任何問題，請透過以下方式聯絡我們...' },
+                    };
+                    const policyKey = e.target.dataset.policy;
+                    getEl('policy-title').innerText = policies[policyKey].title;
+                    getEl('policy-content').innerHTML = `<p>${policies[policyKey].content}</p>`;
+                    getEl('policy-modal').classList.remove('hidden');
+                }
+            });
+            getEl('close-policy-btn').addEventListener('click', () => getEl('policy-modal').classList.add('hidden'));
+            
+            getEl('confirm-cancel-btn').addEventListener('click', () => { getEl('confirm-modal').classList.add('hidden'); confirmCallback = null; });
+            getEl('confirm-ok-btn').addEventListener('click', () => { if (confirmCallback) { confirmCallback(); } getEl('confirm-modal').classList.add('hidden'); confirmCallback = null; });
+        }
+
+        // --- 初始載入與 Firebase 監聽 ---
         document.addEventListener('DOMContentLoaded', () => {
             if (!firebaseConfig || !firebaseConfig.apiKey) {
                 getEl('config-error-overlay').classList.remove('hidden');
                 return; 
             }
+            
             try {
                 app = initializeApp(firebaseConfig);
                 auth = getAuth(app);
                 db = getFirestore(app);
                 storage = getStorage(app);
-            } catch(e) { /* ... */ }
+            } catch(e) {
+                getEl('config-error-overlay').classList.remove('hidden');
+                console.error("Firebase 初始化失敗，請檢查您的 firebaseConfig 是否格式正確。", e);
+                return;
+            }
 
-            cart = getCartFromStorage();
-            updateCartCount();
+            onAuthStateChanged(auth, user => {
+                isCurrentlyAdmin = !!user;
+                updateAdminView();
+            });
 
-            onAuthStateChanged(auth, user => { /* ... */ });
-
-            onSnapshot(collection(db, "products"), (querySnapshot) => {
+            const q = query(collection(db, "products"));
+            onSnapshot(q, (querySnapshot) => {
                 localProductsCache = [];
                 querySnapshot.forEach((doc) => {
                     localProductsCache.push({ id: doc.id, ...doc.data() });
                 });
-                // 收到資料後，根據當前路由渲染頁面
-                handleRouteChange(); 
+                renderAll();
+                if (isCurrentlyAdmin && !getEl('management-modal').classList.contains('hidden')) {
+                    renderManagementPanel();
+                }
+            }, (error) => {
+                 console.error("讀取 Firestore 資料時發生錯誤:", error);
+                 alert("無法讀取商品資料，請檢查您的 Firestore 安全性規則。");
             });
 
-            window.addEventListener('hashchange', handleRouteChange);
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('admin') === 'true' && !auth.currentUser) {
+                getEl('login-modal').classList.remove('hidden');
+            }
             
-            // 處理初次載入
-            handleRouteChange();
             setupEventListeners();
         });
     </script>
